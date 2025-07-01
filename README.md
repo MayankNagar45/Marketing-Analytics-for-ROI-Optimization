@@ -1,132 +1,167 @@
-# Marketing-Analytics-for-ROI-Optimization
-# 📊 Marketing Mix Modeling & GMV Optimization
+# 📊 Bayesian Marketing Mix Modeling (Lightweight_MMM)
 
-This project focuses on analyzing a large-scale marketing dataset (1.6M+ records) to understand the impact of various marketing levers on GMV (Gross Merchandise Value), optimize marketing budgets, and drive data-informed strategic decisions. The solution applies **Bayesian Marketing Mix Modeling (Lightweight_MMM)** with advanced preprocessing, media response modeling, and ROI forecasting.
-
----
-
-## 🚀 Project Objectives
-
-- 📌 **Performance Driver Analysis**  
-  Identify key KPIs influencing revenue using historical sales and marketing data.
-
-- 📌 **Marketing ROI Measurement**  
-  Quantify the return on investment for different media channels.
-
-- 📌 **Budget Optimization**  
-  Recommend optimal media allocation for maximum GMV impact.
+A comprehensive data science project focused on **optimizing marketing budgets**, **analyzing ROI**, and **modeling ad effectiveness** using **Bayesian Marketing Mix Modeling (MMM)**. The project evaluates the contribution of various marketing channels toward revenue growth, using real-world order and event datasets.
 
 ---
 
-## 📂 Data Overview
+## 📌 Objective
 
-- **Size:** 1.6M+ rows  
-- **Sources:** Order data, SKU metadata, media spends, weather, event days  
-- **Features:** 23 columns with categorical, numerical, temporal, and derived metrics  
-- **Challenges:** Missing values, outliers, multicollinearity, and file inconsistency
-
----
-
-## 🧹 Data Preprocessing
-
-- 🔍 **Missing Value Treatment**
-  - `GMV`: dropped missing values
-  - `Weather`: imputed using rolling average
-- 📈 **Transformations**
-  - Log transformation applied to skewed distributions
-- 🔗 **Dataset Merging**
-  - Joined datasets using `FSN_ID` to connect SKUs with transactions
-- 🧰 **Outlier Detection**
-  - Used boxplots and scatterplots to identify extreme values
+- Quantify the effect of marketing channels on **GMV (Gross Merchandise Value)**.
+- Evaluate **channel-level ROI** using historical marketing and order data.
+- Forecast future performance and suggest **optimal budget allocation**.
+- Build a robust, interpretable, and scalable **Bayesian MMM model**.
 
 ---
 
-## 🔍 Exploratory Data Insights
+## 🧾 Dataset Overview
 
-- **GMV Trends:**  
-  - Fluctuates across months with peaks in October, December, and April
-  - Drops in summer months due to seasonal vacations
-
-- **Customer Behavior:**  
-  - 78.5% new customers; average GMV ~₹2,438  
-  - 21.5% repeat customers; average GMV ~₹2,494
-
-- **Sales by Region:**  
-  - Top 20% of regions contribute ₹1.28M  
-  - Bottom 20% regions only ₹9.65K → growth opportunity
-
-- **SLA Impact:**  
-  - Faster delivery (low SLA) is linked to higher GMV
-
-- **Payment Trends:**  
-  - COD preferred overall; credit card use spikes in April (tax season)
+- 🧩 **Size:** 1.6M+ rows with detailed order, product, marketing, and event data.
+- 📂 **Sources Merged:** 
+  - `SKU_details.csv` (product metadata),
+  - `Customers_Orders_Data.csv` (transactional info),
+  - Weather & Special Events data (external signals).
 
 ---
 
-## 📊 Strategic Analysis
+## 🔧 Data Preprocessing & Cleaning
 
-### 📆 Special Days
+### ✅ Key Steps
 
-- **Discount Days:**
-  - Boost average GMV significantly
-  - Don't increase units per order
-
-- **Holiday Patterns:**
-  - Slight GMV dip due to offline shopping preference
-
-### 🌦️ Weather Correlation
-
-- Cameras perform best on dry, warm days  
-- Gaming-related products sell better during rainy weather
-
-### 📺 Media Channel Performance
-
-| Channel              | Best Product Fit     | Notes                                |
-|---------------------|----------------------|--------------------------------------|
-| Online Marketing     | Camera, Gaming       | Highest overall correlation           |
-| Sponsorship          | EntertainmentSmall   | Strong event-driven impact            |
-| TV Advertising       | Camera               | Still relevant for some segments      |
-| Digital & SEM        | Low impact           | Need reevaluation                     |
-| Affiliates           | Moderate             | Opportunity via influencer networks   |
+- **Missing Value Handling:**
+  - Numerical values (e.g., GMV): Dropped or imputed.
+  - Weather Data: Imputed via **rolling average smoothing**.
+- **Outlier Detection:**
+  - Used boxplots and scatter plots to remove anomalous records.
+- **Log Transformation:**
+  - Applied to features to make distributions more Gaussian.
+- **Categorical Consolidation:**
+  - Rare venue categories grouped as “Other”.
 
 ---
 
-## 📈 Modeling Approach – Lightweight_MMM
+## 🧠 Feature Engineering
 
-A robust **Bayesian Marketing Mix Modeling** pipeline using **NumPyro** and probabilistic programming.
-
-### 🛠️ Model Components
-
-1. **Data Collection & Cleaning**  
-   Handle missing values, create features, normalize distributions.
-
-2. **Bayesian Regression**  
-   Use priors, hierarchical modeling, and MCMC sampling.
-
-3. **Media Response Modeling**  
-   - Adstock effect  
-   - Saturation/diminishing returns  
-   - Baseline & trend adjustments
-
-4. **Forecasting**  
-   Predict ROI and simulate future performance under different spend scenarios.
-
-5. **Optimization**  
-   Budget reallocation based on model-inferred efficiency.
+- 🧮 Created meaningful features like:
+  - `Run rate`, `Wickets in hand`, `Balls remaining`, `SLA`.
+- 🧷 Joined FSN_ID to link product & transaction-level info.
+- 🌦️ External signals like **weather conditions** and **holiday indicators** included to model real-world effects.
 
 ---
 
-## 💰 Results & Optimization
+## 📈 Exploratory Data Analysis (EDA)
 
-- **Before Optimization:**
-  - Heavy reliance on sponsorship & digital
-  - High spend did not always yield better ROI
+- 📊 **GMV Trends:**
+  - Peaks: October, December 2023, April 2024.
+  - Dips: August, January, June—linked to seasonal demand.
+- 🔍 **Product Performance:**
+  - Cameras: High GMV but fewer units → high-value items.
+  - Entertainment Small: High volume, low per-unit GMV.
+- 🌧️ **Weather Analysis:**
+  - Rain ↓ → Camera Sales ↓; Game cards ↑ (indoor activity).
+- 🏷️ **Discount & SLA Insights:**
+  - Faster deliveries → Higher GMV.
+  - Non-discounted sales dominate high-value items.
 
-- **After Optimization:**
-  - Suggested rebalancing across online marketing, sponsorship, and affiliates
-  - Generated higher ROI with reduced spend
+---
 
-- **Example:**
-```python
-Previous Budget:  [71.37, 23.51, 343.99, 9.59, 386.74, 123.65, 90.39, 15.03, 138.92]  
-Optimized Budget: [85.68, 28.22, 322.10, 11.24, 309.50, 148.44, 105.58, 18.05, 166.77]
+## 💡 Strategic Insights
+
+- **High Sales Region Strategy:**
+  - Prioritize top 20% performing zones.
+- **Repeat Customers:**
+  - Only 21.5% of customers are repeat buyers. Opportunity to target loyalty.
+- **Luxury vs Mass Market:**
+  - Skewed distribution; opportunity to grow luxury segment.
+
+---
+
+## 📊 Bayesian MMM Model – Lightweight_MMM
+
+### ⚙️ Modeling Components
+
+| Step                        | Description |
+|----------------------------|-------------|
+| 1️⃣ Data Preprocessing     | Handle nulls, standardize inputs |
+| 2️⃣ Model Selection        | Bayesian Regression via NumPyro |
+| 3️⃣ Media Response Model  | Simulate adstock, diminishing returns |
+| 4️⃣ Model Training         | MCMC sampling & cross-validation |
+| 5️⃣ Forecasting            | ROI simulation under new budgets |
+| 6️⃣ Budget Optimization    | Scenario-based reallocation |
+| 7️⃣ Deployment             | Track performance & automate reporting |
+
+### 📐 Key Concepts
+
+- **Adstock & Carryover:** Delayed impact of ad impressions.
+- **Saturation Curve:** Models diminishing returns on spend.
+- **External Factor Integration:** Seasonality, weather, holidays.
+- **Bayesian Inference:** MCMC-based sampling to model uncertainty.
+
+---
+
+## 💸 Optimization Results
+
+| Channel              | Previous Budget (₹) | Optimal Budget (₹) |
+|----------------------|---------------------|---------------------|
+| TV                   | 71,377              | 85,683              |
+| Radio                | 23,512              | 28,225              |
+| Online Marketing     | 343,990             | 322,105             |
+| SEM                  | 9,596               | 11,242              |
+| Digital              | 386,742             | 309,504             |
+| Content Marketing    | 123,658             | 148,442             |
+| Sponsorship          | 90,400              | 105,590             |
+| Affiliates           | 15,040              | 18,054              |
+| Others               | 138,926             | 166,770             |
+
+- 🔁 Reallocation improved GMV and reduced waste.
+- 📉 Channels like **Radio** and **SEM** had low ROI.
+- 📈 Boosting **Online Marketing** and **Content** improved returns.
+
+---
+
+## 🔍 Key Takeaways
+
+- More spend ≠ more returns → Focus on **optimization**.
+- **Online marketing** and **sponsorships** deliver best ROI.
+- Faster delivery (low SLA) = more high-value purchases.
+- GMV is **positively correlated** with MRP and negatively with SLA.
+
+---
+
+## 🛠️ Technologies Used
+
+- **Python** (Pandas, NumPy, Seaborn, Matplotlib)
+- **Bayesian Libraries:** NumPyro, PyMC3
+- **MCMC Sampling:** Markov Chain Monte Carlo
+- **Scikit-learn:** For baseline ML experiments
+- **Lightweight_MMM** (Open-source MMM framework)
+
+---
+
+## 📚 References
+
+- [Wikipedia: Marketing Mix Modeling](https://en.wikipedia.org/wiki/Marketing_mix_modeling)
+- [Google Meridian – Bayesian MMM](https://research.google/pubs/pub46710/)
+
+---
+
+## 🧠 Future Work
+
+- Integrate **real-time marketing dashboards**.
+- Enable **dynamic budget reallocation** via APIs.
+- Use **Geo-level** segmentation to further personalize spend.
+
+---
+
+## 🙌 Authors & Contributors
+
+**TEAM ID:** 2025111  
+Built with collaboration across data science, business, and marketing functions.
+
+---
+
+## 📌 Appendix
+
+- Appendix includes:
+  - Raw data exploration snapshots
+  - Visualization breakdowns
+  - Budget simulation matrices
